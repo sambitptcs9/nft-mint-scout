@@ -24,6 +24,7 @@ POOL = [
     {
         "name": "VoidArchitects", "chain": "Ethereum", "supply": 4444,
         "mintPrice": "0.04 ETH", "baseFloor": 0.09, "baseVol": 62,
+        "mintLink": "https://opensea.io",
         "team": 85, "community": 80, "utility": 78, "timing": 72,
         "analysis": "Doxxed team with two prior successful collections; strong Discord engagement and a clear gaming utility roadmap. Floor has held above mint 3x in secondary already — early momentum is real.",
         "risks": ["High gas window", "Competitive PFP market"],
@@ -36,6 +37,7 @@ POOL = [
     {
         "name": "SolShades Gen2", "chain": "Solana", "supply": 3333,
         "mintPrice": "2.2 SOL", "baseFloor": 5.1, "baseVol": 38,
+        "mintLink": "https://magiceden.io",
         "team": 70, "community": 88, "utility": 55, "timing": 80,
         "analysis": "Gen1 holders getting guaranteed WL — strong community loyalty signal. Floor on Gen1 pumped 4x post-mint. Utility is thin beyond holder perks but Solana liquidity is hot right now.",
         "risks": ["Weak utility beyond community access", "Solana network congestion risk on mint day"],
@@ -48,6 +50,7 @@ POOL = [
     {
         "name": "BaseLayer Punks", "chain": "Base", "supply": 10000,
         "mintPrice": "0.001 ETH", "baseFloor": 0.003, "baseVol": 18,
+        "mintLink": "",
         "team": 45, "community": 60, "utility": 40, "timing": 55,
         "analysis": "Free/near-free mint with high supply is a crowded trade — most holders will flip immediately. Team is anon with no track record. Could 3x on hype but equally likely to go to zero.",
         "risks": ["Anonymous team", "10K supply creates heavy sell pressure", "No roadmap beyond 'community'"],
@@ -60,6 +63,7 @@ POOL = [
     {
         "name": "NeuraMesh Collective", "chain": "Ethereum", "supply": 2000,
         "mintPrice": "0.12 ETH", "baseFloor": 0.28, "baseVol": 95,
+        "mintLink": "https://opensea.io",
         "team": 92, "community": 85, "utility": 90, "timing": 78,
         "analysis": "Backed by a known web3 studio with two exits. Token-gated AI tool access is live — not vaporware. Low supply + real utility = strong floor support. This is a slow-burn hold, not a flip.",
         "risks": ["High mint price limits audience", "AI tool competitive landscape"],
@@ -72,6 +76,7 @@ POOL = [
     {
         "name": "PolygonPets S3", "chain": "Polygon", "supply": 7500,
         "mintPrice": "15 MATIC", "baseFloor": 12, "baseVol": 9,
+        "mintLink": "",
         "team": 38, "community": 42, "utility": 30, "timing": 35,
         "analysis": "Season 3 of a collection that saw declining interest each release. Floor is already below mint on S2. Team communication has been sparse and the roadmap has been quietly pushed back twice.",
         "risks": ["Floor already below S2 mint", "Sparse team comms", "Declining series momentum"],
@@ -84,6 +89,7 @@ POOL = [
     {
         "name": "Echelon Protocol", "chain": "Base", "supply": 5000,
         "mintPrice": "0.008 ETH", "baseFloor": 0.018, "baseVol": 44,
+        "mintLink": "https://opensea.io",
         "team": 72, "community": 75, "utility": 68, "timing": 70,
         "analysis": "Base ecosystem darling with growing DeFi integration — holders get yield-boosted vault access. Mint price is accessible and team has shipped consistently. Mid-range risk with solid upside.",
         "risks": ["Base ecosystem still maturing", "Yield mechanics unaudited"],
@@ -96,6 +102,7 @@ POOL = [
     {
         "name": "FractalBeings", "chain": "Ethereum", "supply": 1111,
         "mintPrice": "0.08 ETH", "baseFloor": 0.19, "baseVol": 71,
+        "mintLink": "https://opensea.io",
         "team": 88, "community": 78, "utility": 60, "timing": 82,
         "analysis": "Ultra-low supply generative art from a gallery-represented artist. 1-of-1 quality within a set — scarcity drives floor. Art market crossover audience means less crypto-native volatility.",
         "risks": ["Art market illiquid vs. PFP", "Niche audience limits liquidity"],
@@ -108,6 +115,7 @@ POOL = [
     {
         "name": "RuneWalkers", "chain": "Solana", "supply": 6666,
         "mintPrice": "1.5 SOL", "baseFloor": 1.2, "baseVol": 14,
+        "mintLink": "",
         "team": 30, "community": 35, "utility": 28, "timing": 25,
         "analysis": "Gaming NFT with no playable game after 9 months. Community sentiment has turned negative and multiple mods have left the Discord. Floor is already below mint with no catalyst in sight.",
         "risks": ["No playable product", "Staff departures", "Floor already below mint", "Treasury wallet movement flagged"],
@@ -170,6 +178,7 @@ def generate_mints(chain_filter):
             ],
             "sellSignals": p["sells"],
             "risks": p["risks"],
+            "mintLink": p.get("mintLink", ""),
         })
     return mints
 
@@ -374,6 +383,7 @@ def render_card(nft, idx):
           <div class="metric-value">{nft["volume24h"]}</div>
         </div>
       </div>
+      {f'''<a href="{nft["mintLink"]}" target="_blank" style="display:block;margin-top:12px;text-align:center;background:#00ff9d18;border:1px solid #00ff9d55;color:#00ff9d;border-radius:6px;padding:7px 0;font-size:12px;font-weight:700;letter-spacing:1px;text-decoration:none;box-shadow:0 0 12px #00ff9d22;">⚡ MINT NOW →</a>''' if nft["signal"] == "STRONG_BUY" and nft.get("mintLink") else ""}
     </div>
     """, unsafe_allow_html=True)
 
@@ -404,9 +414,10 @@ def render_detail(nft):
     st.markdown(f"""
     <div class="detail-section">
       <p class="detail-title">{nft["name"]}</p>
-      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;">
         {signal_badge_html(nft["signal"])}
         <span style="color:#3a5080;font-size:12px;padding:2px 8px;border:1px solid #1a2040;border-radius:4px;">{nft["chain"]}</span>
+        {f'<a href="{nft["mintLink"]}" target="_blank" style="margin-left:auto;background:#00ff9d18;border:1px solid #00ff9d55;color:#00ff9d;border-radius:6px;padding:5px 14px;font-size:12px;font-weight:700;letter-spacing:1px;text-decoration:none;box-shadow:0 0 12px #00ff9d22;">⚡ MINT NOW →</a>' if nft["signal"] == "STRONG_BUY" and nft.get("mintLink") else ""}
       </div>
       <div class="analysis-box">{nft["aiAnalysis"]}</div>
 
